@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Youtube Video Example</title>
+    <style>
+
+        body {
+            margin: 0;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .btn {
+            background: white;
+            border: 1px solid black;
+            border-radius: 0.3em;
+            cursor: pointer;
+            height: 30px;
+            width: 100px;
+        }
+
+        .video-section {
+            margin: 0 auto;
+            position: relative;
+            width: 90%;
+        }
+
+        .video-placeholder {
+            overflow: auto;
+            position: absolute;
+            z-index: 10;
+        }
+
+        .video-placeholder__image {
+            display: block;
+            max-width: 100%;
+            width: 100%;
+        }
+
+        .video-placeholder__button {
+            left: 50%;
+            position: absolute;
+            top: 50%;
+            transform: translateX(-50%) translateY(-50%);
+        }
+
+        .responsive-video-container {
+            padding-bottom: 56.25%;
+            position: relative;
+            z-index: 0;
+        }
+
+        .video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="video-section">
+
+        <div class="video-placeholder js-placeholder" data-video-id="r36wnaSqJtw">
+
+            <img class="video-placeholder__image" id="video-placeholder" src="placeholder.jpg" alt="Placeholder" />
+            <button class="video-placeholder__button btn hidden" id="play-video-button">Play</button>
+
+        </div>
+
+        <div class="responsive-video-container js-video-container">
+
+            <div class="video" id="player"></div>
+
+        </div>
+
+    </div>
+
+    <script>
+
+        var videoId = document.querySelector('[data-video-id]').dataset.videoId,
+            playButton = document.querySelector('#play-video-button'),
+            player;
+
+        var tag = document.createElement('script');
+
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        function onYouTubeIframeAPIReady () {
+            player = new YT.Player('player', {
+                height: '1200',
+                width: '1920',
+                videoId: videoId,
+                playerVars: {
+                    rel: 0
+                },
+                events: {
+                    'onReady': enablePlayVideo
+                }
+            });
+        }
+
+        function enablePlayVideo () {
+            playButton.classList.remove('hidden');
+        }
+
+        function handlePlayVideo (e) {
+            e.preventDefault();
+
+            var placeholder = document.querySelector('.js-placeholder'),
+                videoContainer = document.querySelector('.js-video-container');
+
+            placeholder.classList.add('hidden');
+            videoContainer.classList.remove('hidden');
+
+            player.playVideo();
+        }
+
+        playButton.addEventListener('click', handlePlayVideo, false);
+
+    </script>
+
+</body>
+</html>
